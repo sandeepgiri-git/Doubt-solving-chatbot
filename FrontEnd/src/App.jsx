@@ -4,6 +4,7 @@ import Login from './Pages/Login'
 import Verify from './Pages/Verify'
 import { useUserData } from './Context/UserContext'
 import { LoadingScreen } from './Components/Loading'
+import Dashboard from './Pages/DashBoard'
 
 function App() {
 
@@ -16,7 +17,7 @@ function App() {
     <>
       {isLoad ? (<LoadingScreen/>) : (<BrowserRouter>
         <Routes> 
-          <Route path='/' element = {isAuth ? <Home/> : <Login/>}/> 
+          <Route path='/' element = {isAuth ? <Home/> : <Dashboard/>}/> 
           <Route path='/home' element = {isAuth ? <Home/> : <Login/>}/> 
           <Route path='/login' element = {isAuth ? <Home/> : <Login/>}/>
           <Route path='/verify' element = {isAuth ? <Home/> : <Verify/>}/>

@@ -8,8 +8,12 @@ import Header from '../Components/Header';
 import { ChatData } from '../Context/ChatContext';
 import { LoadingScreen, LoadingSmall } from '../Components/Loading';
 
+import { FaMicrophone } from 'react-icons/fa'; //microphone option icon
+
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isListening, setIsListening] = useState(false); //microphone
+
   const { fetchResponse, messages, prompt, setPrompt, newRequestLoading,loading } = ChatData();
   
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -72,6 +76,44 @@ const Home = () => {
     formatted = formatted.replace(/\n/g, '<br>');
     
     return { __html: formatted };
+  };
+
+
+  //microphone
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.warn("Speech recognition not supported in this browser");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US'; // Set language
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setPrompt(prev => prev ? `${prev} ${transcript}` : transcript);
+      setIsListening(false);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error", event.error);
+      setIsListening(false);
+    };
+
+    if (isListening) {
+      recognition.start();
+    }
+
+    return () => {
+      recognition.stop();
+    };
+  }, [isListening]);
+
+  const toggleListening = () => {
+    setIsListening(prev => !prev);
   };
 
   return (
@@ -141,7 +183,45 @@ const Home = () => {
 
         {/* Input Area */}
         <div className="border-t border-gray-700 bg-gray-900/50 backdrop-blur-sm p-4">
-          <form 
+        <form 
+          onSubmit={submitHandler} 
+          className='flex gap-2 max-w-3xl mx-auto'
+        >
+          <input 
+            className='flex-grow p-3 bg-gray-700 rounded-lg text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all'
+            type="text" 
+            placeholder='Type or speak your doubt...' 
+            value={prompt} 
+            onChange={(e) => setPrompt(e.target.value)}
+            required
+            aria-label="Chat input"
+          />
+          <button
+            type="button" 
+            onClick={toggleListening}
+            className={`p-3 rounded-lg text-white transition-colors ${
+              isListening 
+                ? 'bg-red-600 hover:bg-red-700 animate-pulse' 
+                : 'bg-gray-600 hover:bg-gray-700'
+            }`}
+            disabled={newRequestLoading}
+            aria-label={isListening ? "Stop listening" : "Start voice input"}
+          >
+            <FaMicrophone className="text-xl" />
+          </button>
+          <button 
+            type="submit"
+            className={`p-3 rounded-lg text-white transition-colors ${
+              prompt.trim() 
+                ? 'bg-blue-600 hover:bg-blue-700' 
+                : 'bg-gray-700 cursor-not-allowed'
+            }`}
+            disabled={!prompt.trim() || newRequestLoading}
+          >
+            <IoMdSend className="text-xl"/>
+          </button>
+        </form>
+          {/* <form 
             onSubmit={submitHandler} 
             className='flex gap-2 max-w-3xl mx-auto'
           >
@@ -161,7 +241,7 @@ const Home = () => {
             >
               <IoMdSend className="text-xl"/>
             </button>
-          </form>
+          </form> */}
         </div>
       </div>
     </div>
