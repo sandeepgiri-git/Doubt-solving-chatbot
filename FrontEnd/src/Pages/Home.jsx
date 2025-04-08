@@ -133,7 +133,7 @@ const Home = () => {
 
         {/* Chat Container  change line 94*/ }
         
-        {loading ? <LoadingScreen/> : (<div ref = {messageContainerRef} className='bg-gray-950 flex-1 overflow-y-auto thin-scrollbar p-4 md:p-6'> 
+        {loading ? <LoadingScreen/> : (<div ref = {messageContainerRef} className='bg-gray-850 flex-1 overflow-y-auto thin-scrollbar p-4 md:p-6'> 
           {messages?.length > 0 ? (
             <div className="space-y-6 max-w-3xl mx-auto">
               {messages.map((message, index) => (
@@ -150,7 +150,7 @@ const Home = () => {
 
                   {/* Bot Response */}
                   <div className='flex gap-3'>
-                    <div className="flex-shrink-0 bg-gray-600 p-2 rounded-full h-10 w-10 flex items-center justify-center">
+                    <div className="flex-shrink-0 bg-indigo-300 p-2 rounded-full h-10 w-10 flex items-center justify-center">
                       <FaRobot className="text-white text-xl"/>
                     </div>
                     <div 

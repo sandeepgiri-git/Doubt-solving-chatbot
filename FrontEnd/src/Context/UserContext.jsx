@@ -50,7 +50,7 @@ export const UserProvider = ({children}) => {
             localStorage.clear();
 
             localStorage.setItem("token",data.token);
-            navigate("/home"); // Navigate to verify page
+            navigate("/"); // Navigate to verify page
             setBtnLoading(false);
             setIsAuth(true);
             setUser(data.user);
@@ -95,7 +95,7 @@ export const UserProvider = ({children}) => {
           localStorage.clear();
           setIsAuth(false)
           setUser([])
-          navigate("/login");
+          navigate("/");
           toast.success("Logout successfully");
         }
     }

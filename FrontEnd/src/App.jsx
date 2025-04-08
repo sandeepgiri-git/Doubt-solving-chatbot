@@ -5,6 +5,8 @@ import Verify from './Pages/Verify'
 import { useUserData } from './Context/UserContext'
 import { LoadingScreen } from './Components/Loading'
 import Dashboard from './Pages/DashBoard'
+import QuizUI from './Pages/QuizUi.jsx'
+import { QuizProvider } from './Context/QuizContext.jsx'
 
 function App() {
 
@@ -13,17 +15,21 @@ function App() {
 
   //isAuth ? <Home/> : <Login/> 
   // agar auth hai to home page matlab chatbot dikhega nhi to login page dikhega 
+  
   return (
     <>
       {isLoad ? (<LoadingScreen/>) : (<BrowserRouter>
         <Routes> 
-          <Route path='/' element = {isAuth ? <Home/> : <Dashboard/>}/> 
-          <Route path='/home' element = {isAuth ? <Home/> : <Login/>}/> 
-          <Route path='/login' element = {isAuth ? <Home/> : <Login/>}/>
-          <Route path='/verify' element = {isAuth ? <Home/> : <Verify/>}/>
+          <Route path='/' element = {<Dashboard/>}/> 
+          <Route path='/home' element = {isAuth ? <Home/> : <Dashboard/>}/> 
+          <Route path='/login' element = {isAuth ? <Dashboard/> : <Login/>}/>
+          <Route path='/verify' element = {isAuth ? <Dashboard/> : <Verify/>}/>
+          <Route path='/quiz' element = {isAuth ? (<QuizProvider>
+      <QuizUI />
+    </QuizProvider>) : <Dashboard/>}/>
         </Routes>
-      </BrowserRouter>)}
-      
+      </BrowserRouter>
+    )}
     </>
   )
 }

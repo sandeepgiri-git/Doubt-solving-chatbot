@@ -1,9 +1,26 @@
 import { useState } from 'react';
 import { FiMenu, FiX, FiUser, FiLogIn, FiMessageSquare } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { useUserData } from '../Context/UserContext';
+import { ProfileDropdown } from '../Components/ProfileBtn';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const {isAuth} = useUserData();
+  // const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const handleLogin = () => {
+    navigate("/login")
+  }
+
+  const handleChatbot = () => {
+    navigate("/home");
+  }
+
+  const handleQuiz = () => {
+    navigate("/quiz");
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -17,22 +34,29 @@ const Dashboard = () => {
               <span className="ml-2 text-xl font-semibold text-gray-900">ChatBot AI</span>
             </div>
 
-            {/* Desktop Navigation (right-aligned) */}
-            <div className="hidden md:flex items-center space-x-4">
-              <button className="text-gray-500 hover:text-gray-700 px-3 py-2">
-                Features
-              </button>
-              <button className="text-gray-500 hover:text-gray-700 px-3 py-2">
-                Pricing
-              </button>
+            {isAuth ? (<div className="flex justify-between h-16 w-2xs">
               <button 
-                onClick={() => setShowLoginModal(true)}
+                  onClick={handleQuiz}
+                  className="text-gray-800 hover:text-gray-500 hover:underline px-3 py-2 text-lg "
+                >
+                  Quiz
+                </button>
+                <button onClick={handleChatbot} className="text-gray-800 hover:underline hover:text-gray-500 px-3 py-2 text-lg ">
+                  ChatBot
+                </button>
+            </div>) : <p></p>}
+
+            {/* Desktop Navigation (right-aligned) */}
+            {isAuth ? <ProfileDropdown/> : (<div className="hidden md:flex items-center space-x-4">
+              
+              <button 
+                onClick={handleLogin}
                 className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 flex items-center"
               >
                 <FiLogIn className="mr-2" />
-                Login/Signup
+                Login
               </button>
-            </div>
+            </div>)}
 
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center">
@@ -57,10 +81,7 @@ const Dashboard = () => {
                 Pricing
               </button>
               <button 
-                onClick={() => {
-                  setShowLoginModal(true);
-                  setIsMenuOpen(false);
-                }}
+                onClick={handleLogin}
                 className="block w-full text-left px-3 py-2 text-indigo-600 hover:bg-indigo-50"
               >
                 Login/Signup
@@ -82,7 +103,7 @@ const Dashboard = () => {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button 
-              onClick={() => setShowLoginModal(true)}
+              onClick={handleLogin}
               className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 text-lg font-medium flex items-center justify-center"
             >
               <FiUser className="mr-2" />
@@ -124,7 +145,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Login Modal */}
+      {/* Login Modal
       {showLoginModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
@@ -189,9 +210,9 @@ const Dashboard = () => {
                 </button>
               </p>
             </div>
-          </div>
-        </div>
-      )}
+          </div> */}
+        {/* </div> */}
+      {/* )} */}
     </div>
   );
 };

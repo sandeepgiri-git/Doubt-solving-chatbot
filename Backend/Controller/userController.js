@@ -24,7 +24,7 @@ export const loginUser = async (req,res) =>{
         
         const verifyToken = jwt.sign(tokenPayload, process.env.Activation_Sec,
             {
-                expiresIn: "30m",
+                expiresIn: "10m",
             });
 
         // console.log("creating");
@@ -89,12 +89,12 @@ export const verifyUser = async (req,res) => {
 
 export const myProfile = async (req,res) => {
     try{
-        console.log(req.user);
         const user = await User.findById(req.user._Id);
         res.json({
             user: req.user
         });
     }catch(err){
+        console.log(req.body);
         res.status(500).json({
             message: err.message
         })
