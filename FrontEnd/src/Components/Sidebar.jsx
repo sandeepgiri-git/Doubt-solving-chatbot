@@ -54,7 +54,7 @@ const Sidebar = ({isOpen, toggleSidebar}) => {
                 
                 <button 
                   onClick={ () => deleteChatHandler(e._id)}
-                  className='bg-red-600 text-white text-xl px-3 py-2 rounded-md hover:bg-red-700'
+                  className='bg-indigo-600 text-white text-xl px-3 py-2 rounded-md hover:bg-red-700'
                 >
                   <MdDelete/>
                 </button>
@@ -66,7 +66,7 @@ const Sidebar = ({isOpen, toggleSidebar}) => {
 
       <div className='absolute bottom-0 mb-6 w-full'>
         <button 
-          className='bg-red-600 text-white text-xl px-3 py-2 rounded-md hover:bg-red-700'
+          className='bg-indigo-600 text-white text-xl px-3 py-2 rounded-md hover:bg-red-700'
           onClick={() => handleLogout()}
         >
           
