@@ -1,23 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
 import { FiUser, FiLogOut, FiChevronDown } from 'react-icons/fi';
 import { useUserData } from '../Context/UserContext';
-import axios from 'axios';
-import { server } from '../main';
+// import axios from 'axios';
+// import { server } from '../main';
+import { NavLink } from 'react-router-dom';
 
 export const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const {handleLogout} = useUserData();
-  const [email,setEmail] = useState("my@gmail.com");
+  const {user} = useUserData();
   // Close dropdown when clicking outside
 
-  const getEmail = async () => {
-    const x = await axios.get(`${server}/api/user/me`);
-    console.log(x);
-  }
-  useEffect(() => {
-    getEmail();
-  },[])
+  // console.log(user);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -53,15 +48,17 @@ export const ProfileDropdown = () => {
         >
           <div className="px-4 py-3 border-b">
             {/* <p className="text-sm text-gray-900">John Doe</p> */}
-            <p className="text-sm font-medium text-gray-500 truncate">{email}</p>
+            <p className="text-sm font-medium text-gray-500 truncate">{user.data.user.email}</p>
           </div>
-          <a
-            href="#"
+
+          <NavLink
+            to="/profile"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
             role="menuitem"
           >
             <FiUser className="mr-2" /> Profile
-          </a>
+          </NavLink>
+
           <button
             onClick={handleLogout}
             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"

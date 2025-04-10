@@ -90,11 +90,11 @@ export const verifyUser = async (req,res) => {
 export const myProfile = async (req,res) => {
     try{
         const user = await User.findById(req.user._Id);
+        // console.log("request profile: ",req.body);
         res.json({
             user: req.user
         });
     }catch(err){
-        console.log(req.body);
         res.status(500).json({
             message: err.message
         })
