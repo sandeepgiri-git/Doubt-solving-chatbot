@@ -32,7 +32,7 @@ export const UserProvider = ({children}) => {
 
     //verify
 
-    const [user, setUser] = useState([])
+    const [user, setUser] = useState([[]])
     const [isAuth, setIsAuth] = useState(false);
 
     async function verifyUser(otp, navigate, fetchChats) {
@@ -70,7 +70,6 @@ export const UserProvider = ({children}) => {
     const [isLoad, setIsLoad] = useState(true);
 
     // fetch data by token of user
-
     async function fetchUser() {
         try {
             const data = await axios.get(`${server}/api/user/me`, 
@@ -81,6 +80,7 @@ export const UserProvider = ({children}) => {
                 })
             setIsAuth(true);
             setUser(data);
+            // console.log(data);
             setIsLoad(false);
         } catch (error) {
             console.log(error);
@@ -97,6 +97,7 @@ export const UserProvider = ({children}) => {
           setUser([])
           navigate("/");
           toast.success("Logout successfully");
+          window.location.reload();
         }
     }
 

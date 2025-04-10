@@ -7,6 +7,11 @@ import { LoadingScreen } from './Components/Loading'
 import Dashboard from './Pages/DashBoard'
 import QuizUI from './Pages/QuizUi.jsx'
 import { QuizProvider } from './Context/QuizContext.jsx'
+import ProfilePage from './Pages/ProfilePage.jsx'
+import QuizPage from './Pages/QuizPage.jsx'
+import LeaderboardPage from './Pages/LeaderBoard.jsx'
+import HistoryPage from './Pages/HistoryPage.jsx'
+import StatsPage from './Pages/StatsPage.jsx'
 
 function App() {
 
@@ -25,8 +30,14 @@ function App() {
           <Route path='/login' element = {isAuth ? <Dashboard/> : <Login/>}/>
           <Route path='/verify' element = {isAuth ? <Dashboard/> : <Verify/>}/>
           <Route path='/quiz' element = {isAuth ? (<QuizProvider>
-      <QuizUI />
-    </QuizProvider>) : <Dashboard/>}/>
+                                                    <QuizUI />
+                                                  </QuizProvider>) : <Dashboard/>}/>
+          <Route path='/profile' element = {<ProfilePage/>}/>
+          <Route path='/quizpage' element = {<QuizPage/>}/>
+          <Route path='/leaderboard' element = {<LeaderboardPage/>}/>
+          <Route path='/history' element = {<HistoryPage/>}/>
+          <Route path='/stats' element = {<StatsPage/>}/>
+          
         </Routes>
       </BrowserRouter>
     )}
