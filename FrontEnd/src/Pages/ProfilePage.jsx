@@ -33,7 +33,7 @@ const ProfilePage = () => {
                             <FaCog className="mr-3" />
                             <span>Settings</span>
                         </button>
-                        <button onClick={handleLogout} className="w-full flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition duration-300">
+                        <button onClick={() => handleLogout(navigate)} className="w-full flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition duration-300">
                             <FaSignOutAlt className="mr-3" />
                             <span>Logout</span>
                         </button>

@@ -56,7 +56,7 @@ export const ChatProvider = ({children}) => {
         try {
             const {data} = await axios.get(`${server}/api/chat/all`, {
                 headers: {
-                    token: localStorage.getItem("token"),
+                    token: localStorage.getItem("token") || null,
                 }
             });
     

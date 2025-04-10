@@ -2,12 +2,14 @@ import { createContext , useContext, useEffect, useState } from "react";
 import {toast,Toaster} from "react-hot-toast"
 import axios from "axios"
 import {server} from "../main"
+import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext();
 
 export const UserProvider = ({children}) => {
 
     const [btnLoading, setBtnLoading] = useState(false);
+    // const navigate = useNavigate();
 
     async function loginUser(email, navigate) {
         setBtnLoading(true);
@@ -75,7 +77,7 @@ export const UserProvider = ({children}) => {
             const data = await axios.get(`${server}/api/user/me`, 
                 {
                     headers:{
-                        token: localStorage.getItem("token"),
+                        token: localStorage.getItem("token") || null,
                     }
                 })
             setIsAuth(true);
