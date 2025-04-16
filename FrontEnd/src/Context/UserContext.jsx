@@ -57,6 +57,7 @@ export const UserProvider = ({children}) => {
             setIsAuth(true);
             setUser(data.user);
             fetchChats();
+            fetchUser();
         }
         catch (err) {
             const errorMessage = err.response?.data?.message || 
@@ -74,12 +75,14 @@ export const UserProvider = ({children}) => {
     // fetch data by token of user
     async function fetchUser() {
         try {
+            const t = localStorage.getItem("token");
             const data = await axios.get(`${server}/api/user/me`, 
                 {
                     headers:{
-                        token: localStorage.getItem("token") || null,
+                        token: t,
                     }
                 })
+            
             setIsAuth(true);
             setUser(data);
             // console.log(data);

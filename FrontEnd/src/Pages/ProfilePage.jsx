@@ -99,9 +99,11 @@ const ProfilePage = () => {
                                 </button>
                                 <br />
                                 <textarea 
-                                    className='w-full'
+                                    className='w-full resize-none h-32 p-2 border border-gray-300 rounded-lg'
                                     defaultValue={bio || "Not set yet"}
                                     disabled={!isEdit}
+                                    onChange={(e) => setBio(e.target.value)}
+                                    // cols={10}
                                 />
                             </div>
                             
