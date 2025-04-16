@@ -6,7 +6,6 @@ import cors from 'cors';
 import UserRoutes from './Routes/UserRoutes.js'
 import chatRoutes from './Routes/ChatRoute.js';
 
-
 const app = express();
 app.use(express.json());
 app.use(cors());

@@ -2,6 +2,7 @@ import axios from 'axios';
 import {createContext, useContext, useEffect, useState} from 'react'
 import { server } from '../main';
 import toast from 'react-hot-toast';
+import { useUserData } from './UserContext';
 
 const ChatContext = createContext();
 
@@ -13,6 +14,7 @@ export const ChatProvider = ({children}) => {
     const [chats, setChats] = useState([]);
     const [createLod, setCreateLod] = useState(false);
     const [Loading, setLoading] = useState(false);
+    const {isAuth} = useUserData();
 
     async function fetchResponse() {
         if(!prompt.trim()) return toast.error("Please enter a prompt");
@@ -125,7 +127,7 @@ export const ChatProvider = ({children}) => {
     }, []);
 
     useEffect(() => {
-        fetchMessages();
+        fetchMessages();   
     }, [selected]);
 
     return (

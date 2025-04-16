@@ -12,6 +12,7 @@ import QuizPage from './Pages/QuizPage.jsx'
 import LeaderboardPage from './Pages/LeaderBoard.jsx'
 import HistoryPage from './Pages/HistoryPage.jsx'
 import StatsPage from './Pages/StatsPage.jsx'
+import SettingsPage from './Pages/Setting.jsx'
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
           <Route path='/leaderboard' element = {<LeaderboardPage/>}/>
           <Route path='/history' element = {<HistoryPage/>}/>
           <Route path='/stats' element = {<StatsPage/>}/>
+          <Route path='/settings' element = {<SettingsPage/>}/>
           
         </Routes>
       </BrowserRouter>
