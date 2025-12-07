@@ -14,7 +14,7 @@ const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isListening, setIsListening] = useState(false); //microphone
 
-  const { fetchResponse, messages, prompt, setPrompt, newRequestLoading,loading } = ChatData();
+  const { fetchResponse, messages, prompt, setPrompt, newRequestLoading, loading } = ChatData();
   
   const toggleSidebar = () => setIsOpen(!isOpen);
 

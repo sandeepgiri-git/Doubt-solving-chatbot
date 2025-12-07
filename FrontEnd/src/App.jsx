@@ -24,7 +24,8 @@ function App() {
   
   return (
     <>
-      {isLoad ? (<LoadingScreen/>) : (<BrowserRouter>
+      {isLoad ? (<LoadingScreen/>) : (
+        <BrowserRouter>
         <Routes> 
           <Route path='/' element = {<Dashboard/>}/> 
           <Route path='/home' element = {isAuth ? <Home/> : <Dashboard/>}/> 
@@ -34,10 +35,12 @@ function App() {
                                                     <QuizUI />
                                                   </QuizProvider>) : <Dashboard/>}/>
           <Route path='/profile' element = {<ProfilePage/>}/>
+          
           <Route path='/quizpage' element = {<QuizPage/>}/>
           <Route path='/leaderboard' element = {<LeaderboardPage/>}/>
           <Route path='/history' element = {<HistoryPage/>}/>
           <Route path='/stats' element = {<StatsPage/>}/>
+
           <Route path='/settings' element = {<SettingsPage/>}/>
           
         </Routes>
