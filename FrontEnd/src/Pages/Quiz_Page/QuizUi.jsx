@@ -1,4 +1,4 @@
-import { useQuiz } from '../Context/QuizContext';
+import { useQuiz } from '../../Context/QuizContext';
 
 const QuizUI = () => {
   const {
