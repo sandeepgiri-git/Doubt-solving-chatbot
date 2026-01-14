@@ -3,16 +3,17 @@ import { createTransport } from "nodemailer";
 const sendMail = async (email, subject, otp) => {
     const transport = createTransport({
         host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // Use SSL
+        port: 587,
+        secure: false,
         auth: {
             user: process.env.GMAIL,
-            pass: process.env.PASSWORD, // Ensure this is a 16-digit App Password
+            pass: process.env.PASSWORD,
         },
-        // ADD THIS: Critical for cloud deployments like Render
-        tls: {
-            rejectUnauthorized: false
-        }
+        // Force IPv4 address family
+        connectionTimeout: 10000, // 10 seconds
+        greetingTimeout: 10000,
+        socketTimeout: 10000,
+        dnsV_4: true 
     });
 
     const html = `
