@@ -1,19 +1,33 @@
 import { createTransport } from "nodemailer";
 
+// Validate environment variables at startup
+if (!process.env.GMAIL || !process.env.PASSWORD) {
+    console.error("ERROR: Email credentials not configured! Set GMAIL and PASSWORD environment variables.");
+}
+
+// Create persistent transport (reuse for multiple emails)
+const transport = createTransport({
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false, // MUST be false for 587
+    auth: {
+        user: "apikey",                 // MUST be exactly "apikey"
+        pass: process.env.BREVO_API_KEY // Brevo API key
+    },
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
+    socketTimeout: 20000,
+});
+
 const sendMail = async (email, subject, otp) => {
-    const transport = createTransport({
-        host: "smtp-relay.brevo.com",
-        port: 587,
-        secure: false,
-        auth: {
-            user: process.env.GMAIL,
-            pass: process.env.PASSWORD,
-        },
-        // Force IPv4 address family
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 10000,
-    });
+    // Validate inputs
+    if (!email || !subject || otp === undefined) {
+        throw new Error("Missing required parameters: email, subject, and otp are required");
+    }
+    
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new Error(`Invalid email format: ${email}`);
+    }
 
     const html = `
     <!DOCTYPE html>
@@ -72,15 +86,20 @@ const sendMail = async (email, subject, otp) => {
 
     try {
         await transport.sendMail({
-            from: `"ChatBot AI" <${process.env.GMAIL}>`,
+            from: `"ChatBot AI" <${process.env.EMAIL_FROM}>`,
             to: email,
             subject,
             html,
         });
         console.log("Email sent successfully to:", email);
     } catch (error) {
-        console.error("Nodemailer Error:", error);
-        throw error; // Re-throw so your controller catches it and stops the loading state
+        console.error("Email Error - Details:", {
+            email,
+            errorMessage: error.message,
+            errorCode: error.code,
+            timestamp: new Date().toISOString()
+        });
+        throw new Error(`Failed to send email to ${email}: ${error.message}`);
     }
 }
 
