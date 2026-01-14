@@ -5,7 +5,7 @@ import App from './App.jsx'
 import { UserProvider } from './Context/UserContext.jsx'
 import { ChatProvider } from './Context/ChatContext.jsx'
 
-export const server = "http://localhost:4000";
+export const server = "https://doubt-solving-chatbot.onrender.com";
 
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
