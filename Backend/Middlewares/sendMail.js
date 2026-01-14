@@ -1,4 +1,6 @@
 import { createTransport } from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
 // Validate environment variables at startup
 if (!process.env.GMAIL || !process.env.PASSWORD) {
