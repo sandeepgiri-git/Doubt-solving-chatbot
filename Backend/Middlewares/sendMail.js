@@ -1,65 +1,114 @@
-import nodemailer from "nodemailer";
+import axios from "axios";
 import dotenv from "dotenv";
-
 dotenv.config();
 
-// ✅ Validate Brevo env variables
-if (!process.env.BREVO_API_KEY || !process.env.EMAIL_FROM) {
-    console.error("❌ BREVO_API_KEY or EMAIL_FROM is missing in environment variables");
-    process.exit(1);
-}
-
-// ✅ Create transport (Brevo SMTP)
-const transport = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false,
-    auth: {
-        user: "apikey",
-        pass: process.env.BREVO_API_KEY,
-    },
-    connectionTimeout: 20000,
-    greetingTimeout: 20000,
-    socketTimeout: 20000,
-});
-
-// ✅ Verify SMTP connection (VERY IMPORTANT)
-transport.verify((error, success) => {
-    if (error) {
-        console.error("❌ SMTP connection failed:", error);
-    } else {
-        console.log("✅ SMTP server is ready to send emails");
-    }
-});
-
 const sendMail = async (email, subject, otp) => {
-    if (!email || !subject || !otp) {
-        throw new Error("Email, subject, and OTP are required");
-    }
-
     try {
-        await transport.sendMail({
-            from: `"ChatBot AI" <${process.env.EMAIL_FROM}>`,
-            to: email,
-            subject,
-            html: `
-                <div style="max-width:400px;margin:auto;background:#0f172a;padding:30px;border-radius:20px;color:#f1f5f9;text-align:center">
-                    <h2>Verification Code</h2>
-                    <p>Use the OTP below to login</p>
-                    <h1 style="letter-spacing:8px;color:#6366f1">${otp}</h1>
-                    <p style="font-size:12px;color:#94a3b8">Secure Login • MERN AI Project</p>
-                </div>
-            `,
-        });
+        await axios.post(
+            "https://api.brevo.com/v3/smtp/email",
+            {
+                sender: {
+                    name: "ChatBot AI",
+                    email: process.env.EMAIL_FROM,
+                },
+                to: [
+                    {
+                        email: email,
+                    },
+                ],
+                subject: subject,
+                htmlContent: `
+                    <div style="max-width:400px;margin:auto;background:#0f172a;padding:30px;border-radius:20px;color:#f1f5f9;text-align:center">
+                        <h2>Verification Code</h2>
+                        <p>Use the OTP below to login</p>
+                        <h1 style="letter-spacing:8px;color:#6366f1">${otp}</h1>
+                        <p style="font-size:12px;color:#94a3b8">Secure Login • MERN AI Project</p>
+                    </div>
+                `,
+            },
+            {
+                headers: {
+                    "api-key": process.env.BREVO_API_KEY,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
 
-        console.log("✅ Email sent to:", email);
+        console.log("✅ Email sent successfully to:", email);
     } catch (error) {
-        console.error("❌ Email send failed:", error);
+        console.error(
+            "❌ Brevo API Email Error:",
+            error.response?.data || error.message
+        );
         throw error;
     }
 };
 
 export default sendMail;
+
+
+// import nodemailer from "nodemailer";
+// import dotenv from "dotenv";
+
+// dotenv.config();
+
+// // ✅ Validate Brevo env variables
+// if (!process.env.BREVO_API_KEY || !process.env.EMAIL_FROM) {
+//     console.error("❌ BREVO_API_KEY or EMAIL_FROM is missing in environment variables");
+//     process.exit(1);
+// }
+
+// // ✅ Create transport (Brevo SMTP)
+// const transport = nodemailer.createTransport({
+//     host: "smtp-relay.brevo.com",
+//     port: 587,
+//     secure: false,
+//     auth: {
+//         user: "apikey",
+//         pass: process.env.BREVO_API_KEY,
+//     },
+//     connectionTimeout: 20000,
+//     greetingTimeout: 20000,
+//     socketTimeout: 20000,
+// });
+
+// // ✅ Verify SMTP connection (VERY IMPORTANT)
+// transport.verify((error, success) => {
+//     if (error) {
+//         console.error("❌ SMTP connection failed:", error);
+//     } else {
+//         console.log("✅ SMTP server is ready to send emails");
+//     }
+// });
+
+// const sendMail = async (email, subject, otp) => {
+//     if (!email || !subject || !otp) {
+//         throw new Error("Email, subject, and OTP are required");
+//     }
+
+//     try {
+//         await transport.sendMail({
+//             from: `"ChatBot AI" <${process.env.EMAIL_FROM}>`,
+//             to: email,
+//             subject,
+//             html: `
+//                 <div style="max-width:400px;margin:auto;background:#0f172a;padding:30px;border-radius:20px;color:#f1f5f9;text-align:center">
+//                     <h2>Verification Code</h2>
+//                     <p>Use the OTP below to login</p>
+//                     <h1 style="letter-spacing:8px;color:#6366f1">${otp}</h1>
+//                     <p style="font-size:12px;color:#94a3b8">Secure Login • MERN AI Project</p>
+//                 </div>
+//             `,
+//         });
+
+//         console.log("✅ Email sent to:", email);
+//     } catch (error) {
+//         console.error("❌ Email send failed:", error);
+//         throw error;
+//     }
+// };
+
+// export default sendMail;
 
 
 // import { createTransport } from "nodemailer";
