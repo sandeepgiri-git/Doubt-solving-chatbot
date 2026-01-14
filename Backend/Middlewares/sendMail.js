@@ -2,7 +2,7 @@ import { createTransport } from "nodemailer";
 
 const sendMail = async (email, subject, otp) => {
     const transport = createTransport({
-        host: "smtp.gmail.com",
+        host: "smtp-relay.brevo.com",
         port: 587,
         secure: false,
         auth: {
@@ -10,10 +10,9 @@ const sendMail = async (email, subject, otp) => {
             pass: process.env.PASSWORD,
         },
         // Force IPv4 address family
-        connectionTimeout: 10000, // 10 seconds
+        connectionTimeout: 10000,
         greetingTimeout: 10000,
         socketTimeout: 10000,
-        dnsV_4: true 
     });
 
     const html = `
