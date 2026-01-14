@@ -33,9 +33,9 @@ const Dashboard = () => {
             <div className="hidden md:flex items-center gap-8">
               {isAuth && (
                 <div className="flex items-center gap-6">
-                  <button onClick={handleQuiz} className="text-slate-400 hover:text-white transition-colors font-medium">
+                  {/* <button onClick={handleQuiz} className="text-slate-400 hover:text-white transition-colors font-medium">
                     Quiz Arena
-                  </button>
+                  </button> */}
                   <button onClick={handleChatbot} className="text-slate-400 hover:text-white transition-colors font-medium">
                     AI Chat
                   </button>

@@ -34,14 +34,14 @@ function App() {
           <Route path='/quiz' element = {isAuth ? (<QuizProvider>
                                                     <QuizUI />
                                                   </QuizProvider>) : <Dashboard/>}/>
-          <Route path='/profile' element = {<ProfilePage/>}/>
+          {/* <Route path='/profile' element = {<ProfilePage/>}/>
           
           <Route path='/quizpage' element = {<QuizPage/>}/>
           <Route path='/leaderboard' element = {<LeaderboardPage/>}/>
           <Route path='/history' element = {<HistoryPage/>}/>
           <Route path='/stats' element = {<StatsPage/>}/>
 
-          <Route path='/settings' element = {<SettingsPage/>}/>
+          <Route path='/settings' element = {<SettingsPage/>}/> */}
           
         </Routes>
       </BrowserRouter>

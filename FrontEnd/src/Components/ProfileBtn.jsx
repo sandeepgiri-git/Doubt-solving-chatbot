@@ -57,7 +57,7 @@ export const ProfileDropdown = () => {
             <p className="text-sm font-medium text-slate-200 truncate">{email}</p>
           </div>
 
-          <div className="px-1">
+          {/* <div className="px-1">
             <NavLink
               to="/profile"
               onClick={() => setIsOpen(false)}
@@ -79,7 +79,7 @@ export const ProfileDropdown = () => {
               <FiSettings className="mr-3 text-lg group-hover:text-indigo-400" /> 
               <span>Settings</span>
             </button>
-          </div>
+          </div> */}
 
           <div className="px-1 mt-1 pt-1 border-t border-slate-800">
             <button

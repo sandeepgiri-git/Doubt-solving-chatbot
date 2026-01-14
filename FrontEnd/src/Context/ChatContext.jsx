@@ -2,7 +2,7 @@ import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import { server } from "../main";
 import toast from "react-hot-toast";
-import { useUserData } from "./UserContext";
+// import { useUserData } from "./UserContext";
 
 const ChatContext = createContext();
 
@@ -14,31 +14,33 @@ export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [createLod, setCreateLod] = useState(false);
   const [Loading, setLoading] = useState(false);
-  const { isAuth } = useUserData();
+  const [fetched, setFetched] = useState(false);
+  //   const { isAuth } = useUserData();
 
   async function fetchResponse() {
     if (!prompt.trim()) return toast.error("Please enter a prompt");
     if (!selected) return toast.error("No chat selected");
 
-    setNewRequestLoading(true);
+    // Store the prompt in a constant so we can clear the input field immediately
+    const userQuestion = prompt;
+    setPrompt(""); // Clear input field immediately for better UX
+
+    // Step 1: Add the user's question to the UI immediately
+    // We leave 'answer' as an empty string or null for now
+    const temporaryMessage = {
+      question: userQuestion,
+      answer: null,
+    };
+    setMessages((prev) => [...prev, temporaryMessage]);
+    setNewRequestLoading(true); // Show the "Thinking..." indicator
 
     try {
-      // 1. Artificial delay (optional)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // 2. GROQ API call
-      console.log(import.meta.env.VITE_GROQ_API_KEY)
+      // Step 2: GROQ API call
       const response = await axios.post(
         "https://api.groq.com/openai/v1/chat/completions",
         {
           model: "llama-3.3-70b-versatile",
-        //   model: "llama3-70b-8192",
-          messages: [
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
+          messages: [{ role: "user", content: userQuestion }],
           temperature: 0.7,
         },
         {
@@ -49,93 +51,107 @@ export const ChatProvider = ({ children }) => {
         }
       );
 
-      const message = {
-        question: prompt,
-        answer: response.data?.choices?.[0]?.message?.content || "No response",
-      };
+      const aiAnswer =
+        response.data?.choices?.[0]?.message?.content || "No response";
 
-    //   console.log(message);
+      // Step 3: Update the last message in the list with the AI's answer
+      setMessages((prev) => {
+        const updatedMessages = [...prev];
+        updatedMessages[updatedMessages.length - 1].answer = aiAnswer;
+        return updatedMessages;
+      });
 
-      setMessages((prev) => [...prev, message]);
-      setPrompt("");
+      setFetched(true); // Trigger Typewriter
+      setNewRequestLoading(false); // Hide "Thinking..."
 
-      // 3. Optional delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // 4. Backend API call
+      // Step 4: Backend API call to save
       await axios.post(
         `${server}/api/chat/${selected}`,
-        {
-          question: prompt,
-          answer: message.answer,
-        },
-        {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        }
+        { question: userQuestion, answer: aiAnswer },
+        { headers: { token: localStorage.getItem("token") } }
       );
     } catch (error) {
-      if (error.response?.status === 429) {
-        toast.error("Too many requests. Please wait a moment.");
-      } else {
-        toast.error(
-          error.response?.data?.error?.message || "Something went wrong"
-        );
-      }
+      // Remove the empty message if the API fails so the UI stays clean
+      setMessages((prev) => prev.slice(0, -1));
+      toast.error(
+        error.response?.data?.error?.message || "Something went wrong"
+      );
     } finally {
       setNewRequestLoading(false);
     }
   }
-
   // async function fetchResponse() {
-  //     if(!prompt.trim()) return toast.error("Please enter a prompt");
-  //     if(!selected) return toast.error("No chat selected");
+  //   if (!prompt.trim()) return toast.error("Please enter a prompt");
+  //   if (!selected) return toast.error("No chat selected");
 
-  //     setNewRequestLoading(true);
-  //     try {
-  //         // 1. Add artificial delay to prevent rate limiting
-  //         await new Promise(resolve => setTimeout(resolve, 1000));
+  //   setNewRequestLoading(true);
 
-  //         // 2. Gemini API call
-  //         const response = await axios({
-  //             url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyAg0HLWsyUs9V0dqmTDE_j8eeVnQMJVLRs",
-  //             method: "post",
-  //             data: {
-  //                 contents: [{parts: [{text: prompt}] }],
-  //             }
-  //         });
+  //   try {
+  //     // 1. Artificial delay (optional)
+  //   //   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  //         const message = {
-  //             question: prompt,
-  //             answer: response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response",
-  //         };
+  //     // 2. GROQ API call
+  //     const response = await axios.post(
+  //       "https://api.groq.com/openai/v1/chat/completions",
+  //       {
+  //         model: "llama-3.3-70b-versatile",
+  //       //   model: "llama3-70b-8192",
+  //         messages: [
+  //           {
+  //             role: "user",
+  //             content: prompt,
+  //           },
+  //         ],
+  //         temperature: 0.7,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-  //         setMessages(prev => [...prev, message]);
-  //         setPrompt("");
+  //     const message = {
+  //       question: prompt,
+  //       answer: response.data?.choices?.[0]?.message?.content || "No response",
+  //     };
 
-  //         // 3. Optional: Add delay before backend call
-  //         await new Promise(resolve => setTimeout(resolve, 500));
+  //     // 3. Optional delay
+  //   //   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  //         // 4. Backend API call
-  //         await axios.post(`${server}/api/chat/${selected}`, {
-  //             question: prompt,
-  //             answer: message.answer,
-  //         }, {
-  //             headers: {
-  //                 token: localStorage.getItem("token"),
-  //             }
-  //         });
+  //     // 4. Add message first while still loading to trigger typewriter
+  //     setFetched(true);
+  //     setNewRequestLoading(false);
+  //     setMessages((prev) => [...prev, message]);
+  //     setPrompt("");
 
-  //     } catch (error) {
-  //         if (error.response?.status === 429) {
-  //             toast.error("Too many requests. Please wait a moment before trying again.");
-  //         } else {
-  //             toast.error(error.response?.data?.message || "Something went wrong");
-  //         }
-  //     } finally {
-  //         setNewRequestLoading(false);
+  //     // 5. Backend API call
+  //     await axios.post(
+  //       `${server}/api/chat/${selected}`,
+  //       {
+  //         question: prompt,
+  //         answer: message.answer,
+  //       },
+  //       {
+  //         headers: {
+  //           token: localStorage.getItem("token"),
+  //         },
+  //       }
+  //     );
+
+  //     // 6. Then stop loading
+  //   } catch (error) {
+  //     if (error.response?.status === 429) {
+  //       toast.error("Too many requests. Please wait a moment.");
+  //     } else {
+  //       toast.error(
+  //         error.response?.data?.error?.message || "Something went wrong"
+  //       );
   //     }
+  //   } finally {
+  //     setNewRequestLoading(false);
+  //   }
   // }
 
   async function fetchChats() {
@@ -236,6 +252,8 @@ export const ChatProvider = ({ children }) => {
         Loading,
         deleteChat,
         fetchChats,
+        fetched,
+        setFetched,
       }}
     >
       {children}

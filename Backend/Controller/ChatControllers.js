@@ -64,7 +64,7 @@ export const addConversation = async (req,res) => {
 export const getConversation = async (req,res) => {
     try {
         const conversation = await Conversation.find({chat: req.params.id});
-        console.log(conversation);
+        // console.log(conversation);
         if(!conversation){
             return res.status(404).json({
                 message:"No Conversation found"
@@ -84,7 +84,7 @@ export const getConversation = async (req,res) => {
 export const deleteChat = async (req,res) => {
     try{
         const chat = await Chat.findById(req.params.id).lean();
-        console.log(chat);
+        // console.log(chat);
         if(!chat){
             return res.status(404).json({
                 message:"No Chat found"
