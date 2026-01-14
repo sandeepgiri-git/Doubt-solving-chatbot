@@ -4,44 +4,50 @@ import   jwt  from "jsonwebtoken";
 // const jwt = require('jsonwebtoken');
 // const verify = require('jsonwebtoken');
 
-export const loginUser = async (req,res) =>{
-    try{
-        const {email} = req.body;
-        let user = await User.findOne({email}).lean();
-        
-        if(!user){
-            user = new User({ email });  // Create new user instance
+export const loginUser = async (req, res) => {
+    try {
+        const { email } = req.body;
+        console.log("Login attempt for:", email);
+
+        // 1. Check DB Connection
+        let user = await User.findOne({ email }).lean();
+        console.log("Database check complete");
+
+        if (!user) {
+            console.log("Creating new user...");
+            user = new User({ email });
             await user.save();
+            console.log("New user saved");
         }
-        
+
         const otp = Math.floor(Math.random() * 1000000);
 
         const tokenPayload = {
-            userId: user._id, // Store only the user ID (or minimal data)
+            userId: user._id,
             email: user.email,
             otp,
         };
-        
-        const verifyToken = jwt.sign(tokenPayload, process.env.Activation_Sec,
-            {
-                expiresIn: "10m",
-            });
 
-        // console.log("creating");
+        const verifyToken = jwt.sign(tokenPayload, process.env.Activation_Sec, {
+            expiresIn: "10m",
+        });
 
-        await sendMail(email,"Chatbot",otp);
-        
+        // 2. The critical point
+        console.log("Attempting to send email...");
+        await sendMail(email, "Chatbot", otp);
+        console.log("Email sent successfully");
+
         res.json({
             message: "OTP sent to your mail",
             verifyToken
         });
-    }
-    catch(err){
+    } catch (err) {
+        console.error("DETAILED LOGIN ERROR:", err); // Look for this in Render Logs
         res.status(500).json({
             message: err.message,
-        })
+        });
     }
-}
+};
 
 export const verifyUser = async (req,res) => {
     try{
