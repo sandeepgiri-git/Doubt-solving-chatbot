@@ -33,7 +33,7 @@ const sendMail = async (email, subject, otp) => {
                 },
             }
         );
-
+        console.log("OTP is: ", otp);
         console.log("✅ Email sent successfully to:", email);
     } catch (error) {
         console.error(

@@ -10,7 +10,7 @@ import { QuizProvider } from './Context/QuizContext.jsx'
 import ProfilePage from './Pages/ProfilePage.jsx'
 import QuizPage from './Pages/Quiz_Page/QuizPage.jsx'
 import LeaderboardPage from './Pages/Quiz_Page/LeaderBoard.jsx'
-import HistoryPage from './Pages/HistoryPage.jsx'
+import HistoryPage from './Pages/Quiz_Page/HistoryPage.jsx'
 import StatsPage from './Pages/Quiz_Page/StatsPage.jsx'
 import SettingsPage from './Pages/Setting.jsx'
 
